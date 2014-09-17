@@ -1,0 +1,30 @@
+#!/bin/sh
+
+ARM=/dev/shm/on-setarm
+
+if [ -e $ARM ]; then
+	inotifywait -e close_write $ARM
+else
+	while [ ! -e $ARM ]; do
+		sleep 1
+	done
+fi
+
+source /dev/shm/transient_settings
+
+ARGS=""
+
+if [ $OSAM -ne 0 ]; then
+	ARGS="$ARGS -O $OSAM"	
+fi
+
+STREAM=acq400_stream
+if [ -e /mnt/local/acq400_stream ]; then
+	STREAM=/mnt/local/acq400_stream
+fi
+#acq400_stream --verbose=1 --soft-trigger=1 --null-copy --no_demux --nchan=32 -w=2 --pre=9999 --post=10000 --sites=1
+$STREAM --verbose=0 --soft-trigger=$SOFT_TRIGGER --nchan=32 \
+	--demux -w=4 --pre=$PRE --post=$POST $ARGS --sites=1 0
+#/tmp/acq400_stream --verbose=2 --soft-trigger=1 --nchan=32 -w=4 --pre=$PRE --post=$POST -O 1 --sites=1 0
+
+
