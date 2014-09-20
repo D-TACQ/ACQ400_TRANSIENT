@@ -1,0 +1,55 @@
+#!/bin/sh
+# if there's a previous hanging instance, kill it and drop out
+# client can retry at an appropriate moment to restart..
+
+PRE=${1:-0}
+PRE=0
+POST=${2:-100000}
+
+incr_shot() {
+	shot=0
+	SHOT=/etc/acq400/0/${1:-shot}
+	if [ -e ${SHOT} ]; then
+		shot=$(cat ${SHOT})
+	fi
+	let shot=$shot+1
+	echo $shot > ${SHOT}
+}
+set_state() {
+	echo $1 > /etc/acq400/0/transient_state
+}
+set_state 0
+
+source /usr/local/bin/init_stream
+
+SITE=0
+LOG=/var/log/acq400_streamd_$SITE.log
+
+init_stream $SITE 2>&1 >$LOG
+sleep 0.1
+jobs >>$LOG
+echo $SAMPLE_SIZE $OVERSAMPLING $SITE >>$LOG
+
+NCHAN=$(cat /etc/acq400/0/NCHAN)
+if [ $(cat /etc/acq400/0/data32) -ne 0 ]; then
+	WS=4
+else
+	WS=2
+fi
+
+incr_shot
+
+STREAM_OPTS="--state-file=/etc/acq400/0/transient_state"
+
+if [ "x$ACQ400D_TRIG" = "xsoft_trigger" ]; then
+	STREAM_OPTS="$STREAM_OPTS --soft-trigger=1"	
+fi
+
+acq400_stream --$SSPEC $STREAM_OPTS --pre=$PRE --post=$POST -N $NCHAN -w $WS  -v 2
+
+if [ -e /mnt/local/postshot ]; then
+	/mnt/local/postshot
+fi
+
+incr_shot shot_complete
+

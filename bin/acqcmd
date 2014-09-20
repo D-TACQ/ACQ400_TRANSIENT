@@ -1,0 +1,47 @@
+#!/bin/sh
+# gash implementation
+
+get_num_samples() {
+	let bytes=$(ls -l /dev/shm/transient/ch/01 | awk '{print $5}')
+	if [ $(get.site 0 data32) -gt 0 ]; then
+		let nsam=$bytes/4
+	else
+		let nsam=$bytes/2
+	fi
+	echo $nsam
+}
+
+get_state() {
+	state=0
+	if [ -e /etc/acq400/0/transient_state ]; then
+		state=$(cat /etc/acq400/0/transient_state)
+	fi
+	case $state in
+	*)	echo "0 ST_IDLE";;
+	1)	echo "1 ST_ARM";;
+	2)	echo "2 ST_RUN";;
+	esac
+}
+get_channel_mask() {
+	let cmax=$(get.site 0 NCHAN)
+	cmask=""
+	while [ $cmax -ne 0 ]; do
+		cmask="$cmask"1
+		let cmax=$cmax-1
+	done
+	echo $cmask
+}
+case $1 in
+getNumSamples)
+	nsam=$(get_num_samples)
+	echo ACQ32:getNumSamples=$nsam pre=0 post=$nsam;;
+getChannelMask)
+        echo ACQ32:getChannelMask=$(get_channel_mask);;
+getState)
+	echo ACQ32:$(get_state);;
+*)
+	echo ACQ32:command not found
+esac
+
+
+

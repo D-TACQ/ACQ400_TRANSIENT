@@ -1,0 +1,5 @@
+#!/bin/sh
+POST=${1:-100000}
+echo run.transient 0 $POST | nc localhost 2225 >/dev/null
+
+

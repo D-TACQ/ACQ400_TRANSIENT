@@ -1,0 +1,7 @@
+#!/bin/sh
+
+IFS=$'\n'
+while read cmd ; do
+	(IFS=' '; $cmd)
+done
+

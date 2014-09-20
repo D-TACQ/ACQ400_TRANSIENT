@@ -1,0 +1,22 @@
+#!/bin/sh
+
+NCHAN=$(cat /etc/acq400/0/NCHAN)
+SRC=/dev/shm/transient/ch
+let P0=53000
+ 
+# 4226 stream tcp nowait root acq400_knobs acq400_knobs 6
+cat - > /etc/inetd.ch.conf <<EOF
+# $NCHAN $(date)
+53000 stream tcp nowait root run.transient.service run.transient.service gash
+EOF
+
+for ch in $(seq 1 $NCHAN)
+do
+	let px=$P0+$ch
+	src="$SRC/$(printf "%02d" $ch)"
+	echo >>/etc/inetd.ch.conf \
+	"$px stream tcp nowait root cat cat $src"
+done
+
+inetd /etc/inetd.ch.conf
+
