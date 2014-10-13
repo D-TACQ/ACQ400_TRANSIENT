@@ -1,5 +1,5 @@
 #!/bin/sh
-POST=${1:-100000}
-echo run.transient 0 $POST | nc localhost 2225 >/dev/null
 
-
+POST=${1:-4096}
+set.site 0 transient PRE=0 POST=$POST SOFT_TRIGGER=1
+set.site 0 set_arm

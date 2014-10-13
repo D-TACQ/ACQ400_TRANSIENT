@@ -8,10 +8,11 @@ LPORT=$(get-port-from-service acq4xx-transient-log-console)
 
 start() {
 	if [ ! -e /etc/acq400/0/set_arm ]; then
-		ln -s /usr/local/bin/set_arm /etc/acq400/0
-		ln -s /usr/local/bin/set_abort /etc/acq400/0
-		ln -s /usr/local/bin/acqcmd /etc/acq400/0
-		for fstat in shot transient_state shot_complete
+		ln -s /usr/local/bin/set_arm /usr/local/bin/set_abort \
+			/usr/local/bin/acqcmd /usr/local/bin/soft_transient \
+			/etc/acq400/0
+		ln -s /dev/shm/state /etc/acq400/0/transient_state
+		for fstat in shot shot_complete
 		do
 			echo 0 > /etc/acq400/0/$fstat
 		done

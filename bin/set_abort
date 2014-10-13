@@ -1,5 +1,5 @@
 #!/bin/sh
-PIDF=$/var/run/acq400_stream.0.pid
+PIDF=/var/run/acq400_stream.0.pid
 
 if [ -e $PIDF ]; then
 	kill -SIGTERM $(cat $PIDF)
