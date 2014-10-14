@@ -21,8 +21,9 @@ start() {
 		ln -s /dev/shm/state /etc/acq400/0
 	fi
 	export HOME=/root
-	/usr/local/bin/procServ  -c / -p $PIDF -L $LOG -l $LPORT $CPORT \
-	/usr/local/bin/faultmon
+	/usr/local/bin/procServ --holdoff 0 -c / -p $PIDF \
+		-L $LOG -l $LPORT $CPORT \
+		/usr/local/bin/faultmon
 }
 
 stop() {
