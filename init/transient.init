@@ -6,6 +6,14 @@ LOG=/var/log/run.transient.log
 CPORT=$(get-port-from-service acq4xx-transient-console)
 LPORT=$(get-port-from-service acq4xx-transient-log-console)
 
+if [ -e /mnt/local/sysconfig/transient.init ]; then
+	grep ^COOKED /mnt/local/sysconfig/transient.init > /dev/acq400/data/.control
+fi
+
+if [ -e /mnt/local/sysconfig/bos.sh ]; then
+	cat /mnt/local/sysconfig/bos.sh >>/etc/profile.d/bos.sh
+fi
+
 start() {
 	if [ ! -e /etc/acq400/0/set_arm ]; then
 		ln -s /usr/local/bin/set_arm /usr/local/bin/set_abort \

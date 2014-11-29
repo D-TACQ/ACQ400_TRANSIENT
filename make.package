@@ -2,8 +2,8 @@
 # SOS : simple one shot
 DC=$(date +%y%m%d%H%M)
 SEQ=39
-PKG=custom_faultmon
-PACKAGES=../../PACKAGES
+PKG=transient
+PACKAGES=../PACKAGES
 
 rm -Rf opkg/*
 mkdir -p opkg/usr/local/bin \
