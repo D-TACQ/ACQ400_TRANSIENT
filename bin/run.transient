@@ -44,8 +44,18 @@ STREAM_OPTS="--state-file=/etc/acq400/0/transient_state"
 if [ "x$ACQ400D_TRIG" = "xsoft_trigger" ]; then
 	STREAM_OPTS="$STREAM_OPTS --soft-trigger=1"	
 fi
-
-acq400_stream --$SSPEC $STREAM_OPTS --pre=$PRE --post=$POST -N $NCHAN -w $WS  -v 2
+case $ACQ400D_DEMUX in
+yes)
+	STREAM_OPTS="$STREAM_OPTS --demux=1";;
+no)
+	STREAM_OPTS="$STREAM_OPTS --demux=0";;
+*)
+	echo ACQ400D_DEMUX value $ACQ400D_DEMUX;;
+esac
+	
+CMD="acq400_stream --$SSPEC $STREAM_OPTS --pre=$PRE --post=$POST -N $NCHAN -w $WS  --verbose 2 0"
+echo $CMD
+$CMD
 
 if [ -e /mnt/local/postshot ]; then
 	/mnt/local/postshot
