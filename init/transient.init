@@ -6,12 +6,19 @@ LOG=/var/log/run.transient.log
 CPORT=$(get-port-from-service acq4xx-transient-console)
 LPORT=$(get-port-from-service acq4xx-transient-log-console)
 
-if [ -e /mnt/local/sysconfig/transient.init ]; then
-	grep ^COOKED /mnt/local/sysconfig/transient.init > /dev/acq400/data/.control
+CONTROL=/dev/acq400/data/.control
+TRANSINIT=/mnt/local/sysconfig/transient.init
+BOS=/mnt/local/sysconfig/bos.sh
+
+if [ -e $TRANSINIT ]; then
+	grep ^COOKED $TRANSINIT > $CONTROL
+	source $TRANSINIT
 fi
 
-if [ -e /mnt/local/sysconfig/bos.sh ]; then
-	cat /mnt/local/sysconfig/bos.sh >>/etc/profile.d/bos.sh
+echo +++ transient set $CONTROL $(cat $CONTROL)
+
+if [ -e $BOS ]; then
+	cat $BOS >>/etc/profile.d/bos.sh
 fi
 
 start() {
