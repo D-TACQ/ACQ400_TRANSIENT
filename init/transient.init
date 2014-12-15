@@ -12,6 +12,7 @@ BOS=/mnt/local/sysconfig/bos.sh
 
 if [ -e $TRANSINIT ]; then
 	grep ^COOKED $TRANSINIT > $CONTROL
+	grep ^COOKED $TRANSINIT > /dev/shm/transient
 	source $TRANSINIT
 fi
 
