@@ -52,7 +52,7 @@ if [ -e /mnt/local/acq400_stream ]; then
 fi
 $STREAM --verbose=0 --soft-trigger=$SOFT_TRIGGER --nchan=$NCHAN \
 	--state-file=/dev/shm/state \
-	--demux -w=$DW --pre=$PRE --post=$POST $ARGS --sites=$SITES 0
+	--demux 1 -w=$DW --pre=$PRE --post=$POST $ARGS --sites=$SITES 0
 
 if [ -e /mnt/local/postshot ]; then
         /mnt/local/postshot
