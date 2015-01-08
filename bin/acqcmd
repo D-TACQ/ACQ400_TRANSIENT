@@ -2,7 +2,7 @@
 # gash implementation
 
 get_num_samples() {
-	let bytes=$(ls -l /dev/shm/transient/ch/01 | awk '{print $5}')
+	let bytes=$(ls -l /dev/acq400/data/1/01 | awk '{print $5}')
 	if [ $(get.site 0 data32) -gt 0 ]; then
 		let nsam=$bytes/4
 	else
