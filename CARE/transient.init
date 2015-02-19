@@ -1,0 +1,3 @@
+TCON=/usr/local/bin/stream2disks
+MB=32000
+VERBOSE=1

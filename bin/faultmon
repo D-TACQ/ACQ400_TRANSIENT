@@ -30,7 +30,7 @@ source /dev/shm/transient_settings
 
 ARGS="--state-file /dev/shm/state"
 
-if [ $OSAM -gt 0 ]; then
+if [ "x$OSAM" != "x" ] && [ $OSAM -gt 0 ]; then
 # negative code means "one sample per buffer". This is what we want
 	ARGS="$ARGS -O -$OSAM"	
 fi
