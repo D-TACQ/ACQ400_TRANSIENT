@@ -7,6 +7,7 @@ CPORT=$(get-port-from-service acq4xx-transient-console)
 LPORT=$(get-port-from-service acq4xx-transient-log-console)
 
 CONTROL=/dev/acq400/data/.control
+TCON=/usr/local/bin/faultmon
 TRANSINIT=/mnt/local/sysconfig/transient.init
 BOS=/mnt/local/sysconfig/bos.sh
 
@@ -39,7 +40,7 @@ start() {
 	export HOME=/root
 	/usr/local/bin/procServ --holdoff 0 -c / -p $PIDF \
 		-L $LOG -l $LPORT $CPORT \
-		/usr/local/bin/faultmon
+		$TCON	
 }
 
 stop() {
