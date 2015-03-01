@@ -15,11 +15,14 @@ set_state() {
         echo $1 0 0 0 > /etc/acq400/0/transient_state
 }
 
+ST=$(awk '{ print $1 }' < /etc/acq400/0/transient_state)
 
-set_state 0
+if [ "$ST" != "0" ]; then
+	set_state 0
+fi
 
 if [ -e $ARM ]; then
-	inotifywait -e close_write $ARM
+	inotifywait -e close_write $ARM 2>/dev/null >/dev/null
 else
 	while [ ! -e $ARM ]; do
 		sleep 1
@@ -59,4 +62,6 @@ if [ -e /mnt/local/postshot ]; then
 fi
 
 incr_shot shot_complete
+
+exec /usr/local/bin/faultmon
 
