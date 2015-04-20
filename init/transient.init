@@ -52,9 +52,7 @@ start() {
 		for fstat in shot shot_complete
 		do
 			echo 0 > /etc/acq400/0/$fstat
-		done
-
-		echo 0 0 0 0 0 >/dev/shm/state
+		done		
 		ln -s /dev/shm/state /etc/acq400/0
 	fi
 	export HOME=/root
