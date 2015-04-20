@@ -4,6 +4,7 @@ echo ++ transient runs at 39 BEFORE ioc to use knobs restart
 # stream to disk: create this $TRANSINIT
 # TCON=/usr/local/bin/stream2disks
 PIDF=/var/run/run.transient.pid
+PIDF2=/var/run/run.transient.state.pid
 LOG=/var/log/run.transient.log
 CPORT=$(get-port-from-service acq4xx-transient-console)
 LPORT=$(get-port-from-service acq4xx-transient-log-console)
@@ -26,6 +27,22 @@ if [ -e $BOS ]; then
 	cat $BOS >>/etc/profile.d/bos.sh
 fi
 
+
+killdel() {
+       if [ -r ${1} ]; then
+                kill -s TERM $(cat ${1})
+                rm ${1}
+        fi
+}
+
+transient_state_monitor() {
+	while [ 1 ]; do
+		inotifywait -e modify /dev/shm/state >/dev/null 2>/dev/null
+		cat /dev/shm/state
+	done
+}
+
+
 start() {
 	if [ ! -e /etc/acq400/0/set_arm ]; then
 		ln -s /usr/local/bin/set_arm /usr/local/bin/set_abort \
@@ -37,20 +54,20 @@ start() {
 			echo 0 > /etc/acq400/0/$fstat
 		done
 
-		echo 0 0 0 0 >/dev/shm/state
+		echo 0 0 0 0 0 >/dev/shm/state
 		ln -s /dev/shm/state /etc/acq400/0
 	fi
 	export HOME=/root
 	/usr/local/bin/procServ --holdoff 0 -c / -p $PIDF \
-		-L $LOG -l $LPORT $CPORT \
-		$TCON	
+		-L $LOG $LPORT \
+		$TCON
+	/usr/local/bin/procServ --holdoff 0 -c / -p $PIDF2 \
+		-L $LOG $CPORT /usr/local/init/transient.init state_monitor	
 }
 
 stop() {
-        if [ -r ${PIDF} ]; then
-                kill -s TERM $(cat ${PIDF})
-                rm ${PIDF}
-        fi
+	killdel $PIDF
+	killdel $PIDF2 
 }
 
 abort()
@@ -66,6 +83,8 @@ stop)
         stop;;
 abort)
 	abort;;
+state_monitor)
+	transient_state_monitor;;
 *)
         echo "USAGE faultmon start\|stop";;
 esac
