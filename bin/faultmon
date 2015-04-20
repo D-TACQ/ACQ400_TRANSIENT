@@ -12,7 +12,7 @@ incr_shot() {
         echo $shot > ${SHOT}
 }
 set_state() {
-        echo $1 0 0 0 0 > /etc/acq400/0/transient_state
+       echo $1 0 0 0 0 > /etc/acq400/0/transient_state
 }
 
 ST=$(awk '{ print $1 }' < /etc/acq400/0/transient_state)

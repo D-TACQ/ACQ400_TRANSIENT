@@ -1,4 +1,18 @@
 #!/bin/sh
+
+transient_state_monitor() {
+	while [ 1 ]; do
+		inotifywait -e modify /dev/shm/state >/dev/null 2>/dev/null
+		cat /dev/shm/state
+	done
+}
+
+case $1 in
+state_monitor)
+	transient_state_monitor;;
+esac
+
+
 echo ++ transient runs at 39 BEFORE ioc to use knobs restart
 
 # stream to disk: create this $TRANSINIT
@@ -35,12 +49,6 @@ killdel() {
         fi
 }
 
-transient_state_monitor() {
-	while [ 1 ]; do
-		inotifywait -e modify /dev/shm/state >/dev/null 2>/dev/null
-		cat /dev/shm/state
-	done
-}
 
 
 start() {
