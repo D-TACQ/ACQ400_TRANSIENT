@@ -1,18 +1,5 @@
 #!/bin/sh
 
-transient_state_monitor() {
-	while [ 1 ]; do
-		inotifywait -e modify /dev/shm/state >/dev/null 2>/dev/null
-		cat /dev/shm/state
-	done
-}
-
-case $1 in
-state_monitor)
-	transient_state_monitor;;
-esac
-
-
 echo ++ transient runs at 39 BEFORE ioc to use knobs restart
 
 # stream to disk: create this $TRANSINIT
@@ -57,6 +44,7 @@ start() {
 			/usr/local/bin/acqcmd /usr/local/bin/soft_transient \
 			/etc/acq400/0
 		ln -s /dev/shm/state /etc/acq400/0/transient_state
+		echo 0 0 0 0 0 > /etc/acq400/0/transient_state
 		for fstat in shot shot_complete
 		do
 			echo 0 > /etc/acq400/0/$fstat
@@ -68,7 +56,7 @@ start() {
 		-L $LOG $LPORT \
 		$TCON
 	/usr/local/bin/procServ --holdoff 0 -c / -p $PIDF2 \
-		-L $LOG $CPORT /usr/local/init/transient.init state_monitor	
+		-L $LOG $CPORT /usr/local/bin/state_monitor	
 }
 
 stop() {
