@@ -11,22 +11,6 @@ incr_shot() {
         let shot=$shot+1
         echo $shot > ${SHOT}
 }
-set_state() {
-     echo "FAULTMON set state $1 0 0 0 0"
-     echo $1 0 0 0 0 > /etc/acq400/0/transient_state
-}
-
-is_idle() {
-	echo $(awk '{ print $1 }' < /etc/acq400/0/transient_state)
-}
-
-
-# force is_idle poll twice to avoid any race with acq400_stream 
-
-#if [ "$(is_idle)" != "0" ] && [ "$(is_idle)" != "0" ]; then
-	#echo FAULTMON: is_idle "$(is_idle)" therefore
-	#set_state 0
-#fi
 
 if [ -e $ARM ]; then
 	inotifywait -e close_write $ARM 2>/dev/null >/dev/null
@@ -45,24 +29,13 @@ if [ "x$OSAM" != "x" ] && [ $OSAM -gt 0 ]; then
 	ARGS="$ARGS -O -$OSAM"	
 fi
 
-#SITES=$(get.site 0 sites)
-SITES=$(cat /etc/acq400/0/sites)
-NCHAN=$(get.site 0 NCHAN)
-if [ $(get.site 0 data32) -ne 0 ]; then
-	DW=4
-else
-	DW=2
-fi
-
-incr_shot
-
 STREAM=acq400_stream
 if [ -e /mnt/local/acq400_stream ]; then
 	STREAM=/mnt/local/acq400_stream
 fi
-CMD="$STREAM --verbose=0 --soft-trigger=$SOFT_TRIGGER --nchan=$NCHAN \
+CMD="$STREAM --verbose=0 --soft-trigger=$SOFT_TRIGGER \
 	--state-file=/dev/shm/state \
-	--demux 1 -w=$DW --pre=$PRE --post=$POST $ARGS --sites=$SITES 0"
+	--demux 1 --pre=$PRE --post=$POST $ARGS 0"
 	
 echo run $CMD
 $CMD
