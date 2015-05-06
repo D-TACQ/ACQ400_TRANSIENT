@@ -17,6 +17,7 @@ cp init/* opkg/usr/local/init
 
 
 tar cvzf release/${SEQ}-${PKG}-${DC}.tgz -C opkg .
+git tag -a R${DC}
 ls -l release/${SEQ}-${PKG}-${DC}.tgz
 rm -f ${PACKAGES}/${SEQ}-${PKG}*
 cp release/${SEQ}-${PKG}-${DC}.tgz ${PACKAGES}
