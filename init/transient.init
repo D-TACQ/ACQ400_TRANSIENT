@@ -54,9 +54,7 @@ start() {
 	export HOME=/root
 	[ ! -e /tmp/transient.fifo ] && mkfifo /tmp/transient.fifo
 	/usr/local/bin/procServ --holdoff 0 -c / -p $PIDF \
-		-L $LOG $CPORT $TCON --progress /tmp/transient.fifo
-	/usr/local/bin/procServ --holdoff 0 -c / -p $PIDF2 \
-		-L $LOG $LPORT /usr/local/bin/catloop /tmp/transient.fifo
+		-L $LOG -l $LPORT $CPORT $TCON 
 
 }
 
