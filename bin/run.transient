@@ -1,6 +1,7 @@
 #!/bin/sh
 # if there's a previous hanging instance, kill it and drop out
 # client can retry at an appropriate moment to restart..
+# NB : obsoleted by faultmon?
 
 PRE=${1:-0}
 PRE=0

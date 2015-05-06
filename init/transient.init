@@ -52,11 +52,12 @@ start() {
 		ln -s /dev/shm/state /etc/acq400/0
 	fi
 	export HOME=/root
+	[ ! -e /tmp/transient.fifo ] && mkfifo /tmp/transient.fifo
 	/usr/local/bin/procServ --holdoff 0 -c / -p $PIDF \
-		-L $LOG $LPORT \
-		$TCON
+		-L $LOG $CPORT $TCON --progress /tmp/transient.fifo
 	/usr/local/bin/procServ --holdoff 0 -c / -p $PIDF2 \
-		-L $LOG $CPORT /usr/local/bin/state_monitor	
+		-L $LOG $LPORT /usr/local/bin/catloop /tmp/transient.fifo
+
 }
 
 stop() {
