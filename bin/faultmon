@@ -19,7 +19,7 @@ else
 		sleep 1
 	done
 fi
-
+source /usr/local/bin/init_stream
 source /dev/shm/transient_settings
 
 ARGS="--state-file /dev/shm/state $*"
@@ -34,7 +34,6 @@ if [ -e /mnt/local/acq400_stream ]; then
 	STREAM=/mnt/local/acq400_stream
 fi
 CMD="$STREAM --verbose=0 --soft-trigger=$SOFT_TRIGGER \
-	--state-file=/dev/shm/state \
 	--demux 1 --pre=$PRE --post=$POST $ARGS 0"
 	
 echo run $CMD
