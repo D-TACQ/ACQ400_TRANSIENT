@@ -43,7 +43,9 @@ CMD="$STREAM --verbose=0 --soft-trigger=$SOFT_TRIGGER \
 echo run $CMD
 $CMD
 
-if [ -e /mnt/local/postshot ]; then
+if [ -e /dev/shm/nopostshot ]; then
+	rm /dev/shm/nopostshot
+elif [ -e /mnt/local/postshot ]; then
         /mnt/local/postshot
 fi
 

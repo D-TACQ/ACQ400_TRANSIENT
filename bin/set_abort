@@ -1,6 +1,8 @@
 #!/bin/sh
 PIDF=/var/run/acq400_stream.0.pid
 
+echo "no go" > /dev/shm/nopostshot
+
 if [ -e $PIDF ]; then
 	kill -SIGTERM $(cat $PIDF)
 fi
