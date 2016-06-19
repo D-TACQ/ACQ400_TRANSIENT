@@ -2,6 +2,12 @@
 
 echo ++ transient runs at 39 BEFORE ioc to use knobs restart
 
+
+if [ ! -d /dev/acq400/data/ ]; then
+	mkdir -p /dev/acq400/data/
+	mount -t acq400fs acq400fs /dev/acq400/data
+fi
+
 # stream to disk: create this $TRANSINIT
 # TCON=/usr/local/bin/stream2disks
 PIDF=/var/run/run.transient.pid
@@ -51,6 +57,7 @@ start() {
 		done		
 		ln -s /dev/shm/state /etc/acq400/0
 	fi
+	
 	export HOME=/root
 	[ ! -e /tmp/transient.fifo ] && mkfifo /tmp/transient.fifo
 	/usr/local/bin/procServ --holdoff 0 -c / -p $PIDF \
