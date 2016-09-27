@@ -12,6 +12,12 @@ incr_shot() {
         echo $shot > ${SHOT}
 }
 
+force_close() {
+	CRF=/sys/module/acq420fmc/parameters/continuous_reader
+	while [ -e $CRF ] && [ $(cat $CRF) -ne 0 ]; do
+		acq400_teardown
+	done
+}
 source /usr/local/bin/init_stream
 
 if [ -e $ARM ]; then
@@ -22,6 +28,7 @@ else
 	done
 fi
 
+force_close
 init_stream 0
 
 source /dev/shm/transient_settings
@@ -49,6 +56,7 @@ elif [ -e /mnt/local/postshot ]; then
         /mnt/local/postshot
 fi
 
+force_close
 incr_shot shot_complete
 
 exec /usr/local/bin/faultmon
