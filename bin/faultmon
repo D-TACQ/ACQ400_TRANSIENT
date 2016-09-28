@@ -58,6 +58,7 @@ fi
 
 force_close
 incr_shot shot_complete
+fix_state; cat /dev/shm/state
 
 exec /usr/local/bin/faultmon
 
