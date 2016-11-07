@@ -46,6 +46,7 @@ CMD="$STREAM --verbose=0 --soft-trigger=$SOFT_TRIGGER \
 	--demux 1 --pre=$PRE --post=$POST $ARGS 0"
 	
 echo run $CMD
+echo $CMD >/var/log/faultmon_cmd.log
 $CMD
 
 if [ -e /dev/shm/nopostshot ]; then
