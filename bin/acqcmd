@@ -1,6 +1,7 @@
 #!/bin/sh
 # gash implementation
 
+HN=$(hostname)
 
 get_state() {
 	state=0
@@ -24,7 +25,8 @@ get_channel_mask() {
 }
 case $1 in
 getNumSamples)
-	source /dev/shm/transient_settings
+	PRE=$(caget -t $HN:MODE:TRANS_ACT:PRE)
+	POST=$(caget -t $HN:MODE:TRANS_ACT:POST)
 	let nsam=$PRE+$POST
 	echo ACQ32:getNumSamples=$nsam pre=$PRE post=$POST;;
 getChannelMask)
