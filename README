@@ -1,0 +1,12 @@
+README for TRANSIENT
+
+controls transient capture.
+controller is /usr/local/bin/faultmon
+
+alternate controllers are possible
+
+/mnt/local/sysconfig/transient.init:
+TCON=/usr/local/bin/transient-doubletap
+
+
+

@@ -1,0 +1,73 @@
+#!/bin/sh
+
+ARM=/dev/shm/on-setarm
+
+incr_shot() {
+        shot=0
+        SHOT=/etc/acq400/0/${1:-shot}
+        if [ -e ${SHOT} ]; then
+                shot=$(cat ${SHOT})
+        fi
+        let shot=$shot+1
+        echo $shot > ${SHOT}
+}
+
+force_close() {
+	CRF=/sys/module/acq420fmc/parameters/continuous_reader
+	while [ -e $CRF ] && [ $(cat $CRF) -ne 0 ]; do
+		acq400_teardown
+	done
+}
+source /usr/local/bin/init_stream
+
+rm -f $ARM				# avoid race to re-arm
+force_close
+fix_state; cat /dev/shm/state
+while [ ! -e $ARM ]; do
+	usleep 10000
+done
+
+init_stream 0
+
+source /dev/shm/transient_settings
+
+ARGS="--state-file /dev/shm/state $*"
+
+if [ "x$OSAM" != "x" ] && [ $OSAM -gt 0 ]; then
+# negative code means "one sample per buffer". This is what we want
+	ARGS="$ARGS -O -$OSAM"	
+fi
+
+STREAM=acq400_stream
+if [ -e /mnt/local/acq400_stream ]; then
+	STREAM=/mnt/local/acq400_stream
+fi
+
+# SMALLPOST: first soft trigger oneshot
+CMD="$STREAM --verbose=0 --soft-trigger=1 \
+        --demux 1 --pre=0 --post=${SMALLPOST:64000} $ARGS 0"
+echo run $CMD
+echo $CMD >/var/log/faultmon_cmd.log
+$CMD
+
+[ -e /mnt/local/postshot-initial ] && /mnt/local/postshot-initial
+force_close
+
+CMD="$STREAM --verbose=0 --soft-trigger=$SOFT_TRIGGER \
+	--demux 1 --pre=$PRE --post=$POST $ARGS 0"
+	
+echo run $CMD
+echo $CMD >>/var/log/faultmon_cmd.log
+$CMD
+
+if [ -e /dev/shm/nopostshot ]; then
+	rm /dev/shm/nopostshot
+elif [ -e /mnt/local/postshot ]; then
+        /mnt/local/postshot
+fi
+
+force_close
+incr_shot shot_complete
+
+exec /usr/local/bin/transient-doubletap
+
