@@ -44,6 +44,8 @@ if [ -e /mnt/local/acq400_stream ]; then
 fi
 
 # SMALLPOST: first soft trigger oneshot
+TRG=$(get.site 1 trg | awk '{ print $1}')
+set.site 1 trg=1,1,1
 CMD="$STREAM --verbose=0 --soft-trigger=1 \
         --demux 1 --pre=0 --post=${SMALLPOST:64000} $ARGS 0"
 echo run $CMD
@@ -53,6 +55,7 @@ $CMD
 [ -e /mnt/local/postshot-initial ] && /mnt/local/postshot-initial
 force_close
 
+set.site 1 $TRG
 CMD="$STREAM --verbose=0 --soft-trigger=$SOFT_TRIGGER \
 	--demux 1 --pre=$PRE --post=$POST $ARGS 0"
 	
