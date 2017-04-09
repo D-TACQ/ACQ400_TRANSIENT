@@ -45,6 +45,8 @@ fi
 CMD="$STREAM --verbose=0 --soft-trigger=$SOFT_TRIGGER \
 	--demux 1 --pre=$PRE --post=$POST $ARGS 0"
 	
+[ -e /dev/shm/nopostshot ] && rm /dev/shm/nopostshot
+	
 echo run $CMD
 echo $CMD >/var/log/faultmon_cmd.log
 $CMD
