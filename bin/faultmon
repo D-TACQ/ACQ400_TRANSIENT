@@ -43,7 +43,7 @@ if [ -e /mnt/local/acq400_stream ]; then
 	STREAM=/mnt/local/acq400_stream
 fi
 CMD="$STREAM --verbose=0 --soft-trigger=$SOFT_TRIGGER \
-	--demux 1 --pre=$PRE --post=$POST $ARGS 0"
+	--demux $DEMUX --pre=$PRE --post=$POST $ARGS 0"
 	
 [ -e /dev/shm/nopostshot ] && rm /dev/shm/nopostshot
 	
