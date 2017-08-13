@@ -38,4 +38,4 @@ $CMD
 
 force_close
 incr_shot shot_complete
-
+echo SHOT_COMPLETE
