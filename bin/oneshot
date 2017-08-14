@@ -18,9 +18,9 @@ force_close() {
 		acq400_teardown
 	done
 }
-source /usr/local/bin/init_stream
 
-init_stream 0
+NBUFFERS=10
+[ -e /etc/sysconfig/init_oneshot ] && source /etc/sysconfig/init_oneshot
 
 source /dev/shm/transient_settings
 
@@ -28,9 +28,9 @@ ARGS="--state-file /dev/shm/state $*"
 
 STREAM=acq400_stream
 CMD="$STREAM --verbose=0 --soft-trigger=$SOFT_TRIGGER \
+	--nbuffers $NBUFFERS \
 	--demux $DEMUX --pre=$PRE --post=$POST $ARGS 0"
 	
-[ -e /dev/shm/nopostshot ] && rm /dev/shm/nopostshot
 	
 echo run $CMD
 echo $CMD >/var/log/faultmon_cmd.log
