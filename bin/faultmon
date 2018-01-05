@@ -46,15 +46,29 @@ CMD="$STREAM --verbose=0 --soft-trigger=$SOFT_TRIGGER \
 	--demux $DEMUX --pre=$PRE --post=$POST $ARGS 0"
 	
 [ -e /dev/shm/nopostshot ] && rm /dev/shm/nopostshot
-	
+
+if [ -e /etc/preshot.d ]; then
+	for file in /etc/preshot.d/*
+	do
+		[ -x $file ] && $file
+	done
+fi
+
 echo run $CMD
 echo $CMD >/var/log/faultmon_cmd.log
 $CMD
 
 if [ -e /dev/shm/nopostshot ]; then
 	rm /dev/shm/nopostshot
-elif [ -e /mnt/local/postshot ]; then
-        /mnt/local/postshot
+else
+	if [ -e /etc/postshot.d ]; then
+	        for file in /etc/postshot.d/*
+        	do
+                	[ -x $file ] && $file
+	        done
+	fi
+
+	[ -e /mnt/local/postshot ] && /mnt/local/postshot
 fi
 
 force_close
