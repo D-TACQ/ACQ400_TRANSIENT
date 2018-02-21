@@ -50,6 +50,7 @@ start() {
 			/usr/local/bin/acqcmd /usr/local/bin/soft_transient \
 			/etc/acq400/0
 		ln -s /dev/shm/state /etc/acq400/0/transient_state
+		ln -s /usr/local/bin/transient /etc/acq400/0
 		echo 0 0 0 0 0 > /etc/acq400/0/transient_state
 		for fstat in shot shot_complete
 		do
