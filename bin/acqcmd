@@ -1,7 +1,8 @@
 #!/bin/sh
 # gash implementation
 
-HN=$(hostname)
+source /etc/profile.d/epics.sh
+HN=${IOC_HOST}
 
 get_state() {
 	state=0
