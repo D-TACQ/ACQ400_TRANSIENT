@@ -15,7 +15,7 @@ cp CARE/* opkg/usr/local/CARE
 cp bin/* opkg/usr/local/bin
 cp init/* opkg/usr/local/init
 
-
+mkdir -p release
 tar cvzf release/${SEQ}-${PKG}-${DC}.tgz -C opkg .
 git tag -a -m R${DC} R${DC}
 ls -l release/${SEQ}-${PKG}-${DC}.tgz
