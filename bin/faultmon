@@ -68,7 +68,22 @@ else
 	        done
 	fi
 
-	[ -e /mnt/local/postshot ] && /mnt/local/postshot
+	if [ -e /mnt/local/postshot ]; then 
+		retry=0; MAXRETRY=3
+		/mnt/local/postshot
+
+		while [ $? -ne 0 ]; do
+			echo "WARNING. $retry/$MAXTRY postshot failed"
+	                retry=$(($retry+1))
+	                if [ $retry -ge $MAXRETRY ];then
+	                        echo "ERROR: too many retries, please fix by hand"
+	                        exit 1
+	                fi
+	                sleep 2
+	                /mnt/local/postshot
+	       done
+	       [ $retry -ne 0 ] && echo "SUCCESS after $retry attempts"
+	fi
 fi
 
 force_close
