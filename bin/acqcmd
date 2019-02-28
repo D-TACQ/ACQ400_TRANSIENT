@@ -4,6 +4,8 @@
 source /etc/profile.d/epics.sh
 HN=${IOC_HOST}
 
+export EPICS_CA_AUTO_ADDR_LIST=NO EPICS_CA_ADDR_LIST=127.0.0.1
+
 get_state() {
 	state=0
 	if [ -e /etc/acq400/0/transient_state ]; then
