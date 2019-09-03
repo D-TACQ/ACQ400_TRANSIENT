@@ -31,7 +31,7 @@ init_stream 0
 
 source /dev/shm/transient_settings
 
-[ -e /etc/acq400/sysconfig/acq400_transient.conf ] && source /etc/acq400/sysconfig/acq400_transient.conf
+[ -e /etc/sysconfig/acq400_transient.conf ] && source /etc/sysconfig/acq400_transient.conf
 
 ARGS="--state-file /dev/shm/state $*"
 

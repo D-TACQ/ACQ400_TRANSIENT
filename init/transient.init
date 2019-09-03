@@ -23,16 +23,18 @@ TRANSINIT=/mnt/local/sysconfig/transient.init
 ACQ400SH=/mnt/local/sysconfig/acq400.sh
 BOS=/mnt/local/sysconfig/bos.sh
 
+mkdir -p /etc/sysconfig
+
 if [ -e $TRANSINIT ]; then
 	grep ^COOKED $TRANSINIT > $CONTROL
 	grep ^COOKED $TRANSINIT > /dev/shm/transient
 	source $TRANSINIT
-	grep ^TRANS_OPTS $TRANSINIT > /etc/acq400/sysconfig/acq400_transient.conf
+	grep ^TRANS_OPTS $TRANSINIT > /etc/sysconfig/acq400_transient.conf
 fi
 
 if [ -e $ACQ400SH ]; then
 	TOPTS=$(grep ^TRANS_OPTS $ACQ400SH)
-	[ $? -eq 0 ] && echo $TOPTS > /etc/acq400/sysconfig/acq400_transient.conf
+	[ $? -eq 0 ] && echo $TOPTS > /etc/sysconfig/acq400_transient.conf
 fi
 echo +++ transient set $CONTROL $(cat $CONTROL)
 
