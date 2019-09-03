@@ -31,6 +31,8 @@ init_stream 0
 
 source /dev/shm/transient_settings
 
+[ -e /etc/acq400/sysconfig/acq400_transient.conf ] && source /etc/acq400/sysconfig/acq400_transient.conf
+
 ARGS="--state-file /dev/shm/state $*"
 
 if [ "x$OSAM" != "x" ] && [ $OSAM -gt 0 ]; then
@@ -42,7 +44,7 @@ STREAM=acq400_stream
 if [ -e /mnt/local/acq400_stream ]; then
 	STREAM=/mnt/local/acq400_stream
 fi
-CMD="$STREAM --verbose=0 --soft-trigger=$SOFT_TRIGGER \
+CMD="$STREAM --verbose=0 $TRANS_OPTS --soft-trigger=$SOFT_TRIGGER \
 	--demux $DEMUX --pre=$PRE --post=$POST $ARGS 0"
 	
 [ -e /dev/shm/nopostshot ] && rm /dev/shm/nopostshot
