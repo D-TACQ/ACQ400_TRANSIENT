@@ -29,11 +29,11 @@ done
 
 init_stream 0
 
-source /dev/shm/transient_settings
+ARGS="--state-file /dev/shm/state $*"
 
+source /dev/shm/transient_settings
 [ -e /etc/sysconfig/acq400_transient.conf ] && source /etc/sysconfig/acq400_transient.conf
 
-ARGS="--state-file /dev/shm/state $*"
 
 if [ "x$OSAM" != "x" ] && [ $OSAM -gt 0 ]; then
 # negative code means "one sample per buffer". This is what we want
