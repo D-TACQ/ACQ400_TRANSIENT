@@ -1,0 +1,15 @@
+#!/bin/sh
+# always returns a value even if /dev/shm/state is blank
+if [ -z $1  ]; then
+    if [ -e /dev/shm/state ]; then
+	ST="$(cat /dev/shm/state)"
+	if [ "x$ST" != "x" ]; then
+	    echo $ST
+	    exit 0
+        fi
+    fi
+    echo "0 0 0 0 0"
+else
+    echo "$*"  > /dev/shm/state
+fi
+exit 0	  	

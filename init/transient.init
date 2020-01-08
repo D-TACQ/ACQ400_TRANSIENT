@@ -50,6 +50,11 @@ killdel() {
         fi
 }
 
+make_state() {
+/usr/local/bin/safe_state 0 0 0 0 0
+ln -s /usr/local/bin/safe_state /etc/acq400/0/transient_state
+ln -s /usr/local/bin/safe_state /etc/acq400/0/state
+}
 
 
 start() {
@@ -57,14 +62,13 @@ start() {
 		ln -s /usr/local/bin/set_arm /usr/local/bin/set_abort \
 			/usr/local/bin/acqcmd /usr/local/bin/soft_transient \
 			/etc/acq400/0
-		ln -s /dev/shm/state /etc/acq400/0/transient_state
+		make_state
 		ln -s /usr/local/bin/transient /etc/acq400/0
-		echo 0 0 0 0 0 > /etc/acq400/0/transient_state
+
 		for fstat in shot shot_complete
 		do
 			echo 0 > /etc/acq400/0/$fstat
 		done		
-		ln -s /dev/shm/state /etc/acq400/0
 	fi
 	
 	export HOME=/root
