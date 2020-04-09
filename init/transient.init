@@ -23,6 +23,9 @@ TRANSINIT=/mnt/local/sysconfig/transient.init
 ACQ400SH=/mnt/local/sysconfig/acq400.sh
 BOS=/mnt/local/sysconfig/bos.sh
 
+if [ -e $BOS ]; then
+	cat $BOS >>/etc/profile.d/bos.sh
+fi
 mkdir -p /etc/sysconfig
 
 if [ -e $TRANSINIT ]; then
@@ -38,9 +41,6 @@ if [ -e $ACQ400SH ]; then
 fi
 echo +++ transient set $CONTROL $(cat $CONTROL)
 
-if [ -e $BOS ]; then
-	cat $BOS >>/etc/profile.d/bos.sh
-fi
 
 
 killdel() {
@@ -68,7 +68,8 @@ start() {
 		for fstat in shot shot_complete
 		do
 			echo 0 > /etc/acq400/0/$fstat
-		done		
+		done
+                echo 0 >/etc/acq400/0/xdt		
 	fi
 	
 	export HOME=/root
