@@ -13,9 +13,15 @@ incr_shot() {
 }
 
 force_close() {
-	CRF=/sys/module/acq420fmc/parameters/continuous_reader
-	while [ -e $CRF ] && [ $(cat $CRF) -ne 0 ]; do
+	CRF=/sys/module/acq420fmc/parameters/continuous_readers
+	force_count=0
+	while [ -e $CRF ] && [ $(cat $CRF | tr -d ,0) -ne 0 ]; do
 		acq400_teardown
+		force_count=$(($force_count+1))
+		if [ $force_count -gt 1 ]; then
+			echo faultmon stuck on closedown $(cat $CRF)
+			/usr/bin/logger -t faultmon ERROR stuck on closedown $(cat $CRF)
+		fi
 	done
 }
 source /usr/local/bin/init_stream
