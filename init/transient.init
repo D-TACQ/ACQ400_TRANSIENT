@@ -72,6 +72,8 @@ start() {
                 echo 0 >/etc/acq400/0/xdt		
 	fi
 	
+	grep -q emlog /proc/modules; [ $? -ne 0 ] && /sbin/insmod /usr/local/lib/modules/emlog.ko
+	[ -e $LOG ] || mkemlog $LOG
 	export HOME=/root
 	[ ! -e /tmp/transient.fifo ] && mkfifo /tmp/transient.fifo
 	/usr/local/bin/procServ --holdoff 0 -c / -p $PIDF \
