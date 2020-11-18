@@ -15,7 +15,7 @@ incr_shot() {
 force_close() {
 	CRF=/sys/module/acq420fmc/parameters/continuous_readers
 	force_count=0
-	while [ -e $CRF ] && [ $(cat $CRF | tr -d ,0) -ne 0 ]; do
+	while [ -e $CRF ] && [ ! -z $(cat $CRF | tr -d ,0) ]; do
 		acq400_teardown
 		force_count=$(($force_count+1))
 		if [ $force_count -gt 1 ]; then
