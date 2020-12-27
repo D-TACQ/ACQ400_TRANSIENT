@@ -10,6 +10,6 @@ if [ -z $1  ]; then
     fi
     echo "0 0 0 0 0"
 else
-    echo "$*"  > /dev/shm/state
+    echo "$* 0 0 0 0"  > /dev/shm/state
 fi
 exit 0	  	
