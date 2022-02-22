@@ -27,12 +27,14 @@ if [ -e $BOS ]; then
 	cat $BOS >>/etc/profile.d/bos.sh
 fi
 mkdir -p /etc/sysconfig
-
+       
 if [ -e $TRANSINIT ]; then
-	grep ^COOKED $TRANSINIT > $CONTROL
-	grep ^COOKED $TRANSINIT > /dev/shm/transient
 	source $TRANSINIT
-	grep ^TRANS_OPTS $TRANSINIT >> /etc/sysconfig/acq400_transient.conf
+	cookup="COOKED=${COOKED:-0} NSAMPLES=${NSAMPLES:-100000} NCHAN=${NCHAN:-4} TYPE=${TYPE:-SHORT}"
+	echo $cookup > $CONTROL
+	echo $cookup > /dev/shm/transient
+
+	[ ! -z $TRANS_OPTS ] && echo TRANS_OPTS=\"$TRANS_OPTS\" >> /etc/sysconfig/acq400_transient.conf
 fi
 
 if [ -e $ACQ400SH ]; then
