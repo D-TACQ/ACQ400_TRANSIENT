@@ -38,8 +38,14 @@ if [ -e $TRANSINIT ]; then
 fi
 
 if [ -e $ACQ400SH ]; then
-	TOPTS=$(grep ^TRANS_OPTS $ACQ400SH)
-	[ $? -eq 0 ] && echo $TOPTS >> /etc/sysconfig/acq400_transient.conf
+	_TRANS_OPTS=$TRANS_OPTS
+	source $ACQ400SH
+	if [ ! -z $TRANS_OPTS ] && [ "x$_TRANS_OPTS" != "xTRANS_OPTS" ]; then
+		echo TRANS_OPTS=\"$TRANS_OPTS\" >> /etc/sysconfig/acq400_transient.conf
+	fi 
+	if [ "x$FAKE_SITE1" != "x" ] && [ ! -e /etc/acq400/1 ]; then
+		ln -s /etc/acq400/$FAKE_SITE1 /etc/acq400/1
+	fi
 fi
 echo +++ transient set $CONTROL $(cat $CONTROL)
 
