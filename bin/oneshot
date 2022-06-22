@@ -21,7 +21,7 @@ force_close() {
 }
 
 source /dev/shm/transient_settings
-NBUFFERS=$(echo $POST $(cat $KB/ssb $KB/bufferlen) | awk '{ print int($1*$2/$3+1) }')
+NBUFFERS=$(echo $POST $(cat $KB/ssb $KB/bufferlen) | awk '{ print int($1*$2/$3+4) }')
 ARGS="--state-file /dev/shm/state $*"
 STREAM=acq400_stream
 CMD="$STREAM --verbose=0 --soft-trigger=$SOFT_TRIGGER \
