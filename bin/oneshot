@@ -1,10 +1,11 @@
 #!/bin/sh
 
 ARM=/dev/shm/on-setarm
+KB=/etc/acq400/0
 
 incr_shot() {
         shot=0
-        SHOT=/etc/acq400/0/${1:-shot}
+        SHOT=$KB/${1:-shot}
         if [ -e ${SHOT} ]; then
                 shot=$(cat ${SHOT})
         fi
@@ -19,13 +20,9 @@ force_close() {
 	done
 }
 
-NBUFFERS=10
-[ -e /etc/sysconfig/init_oneshot ] && source /etc/sysconfig/init_oneshot
-
 source /dev/shm/transient_settings
-
+NBUFFERS=$(echo $POST $(cat $KB/ssb $KB/bufferlen) | awk '{ print int($1*$2/$3+1) }')
 ARGS="--state-file /dev/shm/state $*"
-
 STREAM=acq400_stream
 CMD="$STREAM --verbose=0 --soft-trigger=$SOFT_TRIGGER \
 	--nbuffers $NBUFFERS \
@@ -35,7 +32,11 @@ CMD="$STREAM --verbose=0 --soft-trigger=$SOFT_TRIGGER \
 echo run $CMD
 echo $CMD >/var/log/faultmon_cmd.log
 $CMD
+RC=$?
 
 force_close
 incr_shot shot_complete
-echo SHOT_COMPLETE
+echo SHOT_COMPLETE $RC
+
+
+
