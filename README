@@ -9,4 +9,6 @@ alternate controllers are possible
 TCON=/usr/local/bin/transient-doubletap
 
 
+BUILD: ./make.package as user
+
 
