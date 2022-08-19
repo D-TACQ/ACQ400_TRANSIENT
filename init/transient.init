@@ -77,7 +77,7 @@ start() {
 		do
 			echo 0 > /etc/acq400/0/$fstat
 		done
-                echo 0 >/etc/acq400/0/xdt		
+        echo 0 >/etc/acq400/0/xdt		
 	fi
 	
 	grep -q emlog /proc/modules; [ $? -ne 0 ] && /sbin/insmod /usr/local/lib/modules/emlog.ko

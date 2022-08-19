@@ -1,10 +1,11 @@
 #!/bin/sh
 
 ARM=/dev/shm/on-setarm
+E400=/etc/acq400
 
 incr_shot() {
         shot=0
-        SHOT=/etc/acq400/0/${1:-shot}
+        SHOT=${E400}/0/${1:-shot}
         if [ -e ${SHOT} ]; then
                 shot=$(cat ${SHOT})
         fi
@@ -96,6 +97,7 @@ fi
 
 force_close
 incr_shot shot_complete
+echo SHOT=0,$(cat ${E400}/0/shot ${E400}/0/shot_complete ${E400}/0/shot | tr ' ' ,)
 
 exec /usr/local/bin/faultmon
 
