@@ -97,7 +97,9 @@ fi
 
 force_close
 incr_shot shot_complete
-echo SHOT=0,$(cat ${E400}/0/shot ${E400}/0/shot_complete ${E400}/0/shot | tr ' ' ,)
+eval $(get.site 0 aggregator)
+S1=${sites%%,*}
+echo "SHOT=0,$(cat ${E400}/${S1}/shot),$(cat ${E400}/0/shot_complete),$(cat ${E400}/0/shot)"
 
 exec /usr/local/bin/faultmon
 
