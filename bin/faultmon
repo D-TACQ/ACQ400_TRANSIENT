@@ -3,9 +3,7 @@
 ARM=/dev/shm/on-setarm
 E400=/etc/acq400
 
-INP=/dev/shm/streamd.in
-[ -e $INP ] || mkemlog $INP 1
-
+/usr/local/CARE/acq400_stream_inp clear
 
 incr_shot() {
         shot=0
@@ -68,7 +66,8 @@ if [ -e /etc/preshot.d ]; then
 fi
 
 echo run $CMD
-echo $CMD >/var/log/faultmon_cmd.log 
+INP=$(/usr/local/CARE/acq400_stream_inp id)
+echo "$CMD \< $INP" >/var/log/faultmon_cmd.log 
 $CMD <$INP
 
 if [ -e /dev/shm/nopostshot ]; then

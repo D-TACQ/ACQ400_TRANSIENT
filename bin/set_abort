@@ -3,15 +3,14 @@ PIDF=/var/run/acq400_stream.0.pid
 INP=/dev/shm/streamd.in
 
 echo "no go" > /dev/shm/nopostshot
-echo quit > $INP
+/usr/local/CARE/acq400_stream_inp quit
 usleep 100000
 
 if [ -e $PIDF ]; then
 	kill -SIGTERM $(cat $PIDF)
 fi
 
-rm $INP
-mkemlog $INP
+/usr/local/CARE/acq400_stream_inp clear
 
 
 
