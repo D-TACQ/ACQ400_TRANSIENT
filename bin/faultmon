@@ -6,6 +6,7 @@ E400=/etc/acq400
 INP=/dev/shm/streamd.in
 [ -e $INP ] || mkemlog $INP 1
 
+
 incr_shot() {
         shot=0
         SHOT=${E400}/0/${1:-shot}
@@ -54,7 +55,7 @@ STREAM=acq400_stream
 if [ -e /mnt/local/acq400_stream ]; then
 	STREAM=/mnt/local/acq400_stream
 fi
-CMD="$STREAM --verbose=0 $TRANS_OPTS --soft-trigger=$SOFT_TRIGGER \
+CMD="$STREAM $TRANS_OPTS --soft-trigger=$SOFT_TRIGGER \
 	--demux $DEMUX --pre=$PRE --post=$POST $ARGS 0"
 	
 [ -e /dev/shm/nopostshot ] && rm /dev/shm/nopostshot
