@@ -6,7 +6,7 @@ PKG=transient
 PACKAGES=../PACKAGES
 
 rm -Rf opkg/*
-mkdir opkg release
+mkdir -p opkg release
 mkdir -p opkg/usr/local/bin \
 	opkg/usr/local/init \
 	opkg/usr/local/CARE \
