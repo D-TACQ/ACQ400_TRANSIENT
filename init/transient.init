@@ -59,7 +59,6 @@ killdel() {
 }
 
 make_state() {
-/usr/local/bin/safe_state 0 0 0 0 0
 ln -s /usr/local/bin/safe_state /etc/acq400/0/transient_state
 ln -s /usr/local/bin/safe_state /etc/acq400/0/state
 }
