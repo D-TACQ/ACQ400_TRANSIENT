@@ -1,7 +1,7 @@
 #!/bin/sh
 
 strip_stx() {
-    sed -e 's/STX=//'
+    sed -e 's/STX //'
 }
 # always returns a value even if /dev/shm/state is blank
 if [ -z $1  ]; then
