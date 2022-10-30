@@ -8,13 +8,9 @@ if [ -z $1  ]; then
 	    exit 0
         fi
     fi
- 		echo "
-0 0 0 0 0
-STX=0 0 0 0 0"
+ 		echo "STX=0 0 0 0 0"
 else
-    echo > /dev/shm/state "
-$* 0 0 0 0
-STX=$* 0 0 0 0"      
+    echo > /dev/shm/state "STX=$* 0 0 0 0"      
 fi
 exit 0
 	  
