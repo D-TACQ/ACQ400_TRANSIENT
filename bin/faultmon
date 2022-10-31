@@ -65,6 +65,7 @@ if [ -e /etc/preshot.d ]; then
 	done
 fi
 
+echo "DATA_SIZE=0,0"
 echo run $CMD
 INP=$(/usr/local/CARE/acq400_stream_inp id)
 echo "$CMD \< $INP" >/var/log/faultmon_cmd.log 
@@ -103,6 +104,7 @@ incr_shot shot_complete
 eval $(get.site 0 aggregator)
 S1=${sites%%,*}
 echo "SHOT=0,$(cat ${E400}/${S1}/shot),$(cat ${E400}/0/shot_complete),$(cat ${E400}/0/shot)"
+echo "DATA_SIZE=$(stat -c%s /dev/acq400/data/raw/0),$(stat -c%s /dev/acq400/data/$S1/01)"
 
 exec /usr/local/bin/faultmon
 
