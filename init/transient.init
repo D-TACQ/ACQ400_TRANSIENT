@@ -2,13 +2,18 @@
 
 echo ++ transient runs at 39 BEFORE ioc to use knobs restart
 
+mod_count=0
 for d in /dev/sites/[123456]; do
-	[ -d $d ] && break
-	if [ ! -d $d ]; then
+	if [ -d $d ]; then
+		break
+	else
 	       echo NO payload found, abort transient init; 
 	       exit 1
 	fi
+	mod_count=$((mod_count+1))
 done
+
+echo transient: mod_count $mod_count
 
 if [ ! -d /dev/acq400/data/ ]; then
 	mkdir -p /dev/acq400/data/
