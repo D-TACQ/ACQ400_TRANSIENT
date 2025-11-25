@@ -1,0 +1,22 @@
+#!/usr/bin/env expect
+puts "hello tcl world"
+
+spawn acq4xx-transient-console
+
+while { 1 } {
+	expect {
+		"void wait_and_cleanup(pid_t) 50" {
+			puts "wdt step 50"
+			expect { 
+				"void wait_and_cleanup(pid_t) 99" {
+					puts "wdt step 99"
+				} 
+				timeout {
+					puts "wdt gotcha .. kill kill kill"
+					exec /usr/local/bin/faultmon_force_kill
+				}
+			}
+		}
+	}
+}
+
