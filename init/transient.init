@@ -27,6 +27,8 @@ PIDF2=/var/run/run.transient.state.pid
 LOG=/var/log/run.transient.log
 CPORT=$(get-port-from-service acq4xx-transient-console)
 LPORT=$(get-port-from-service acq4xx-transient-log-console)
+# @@todo add to services
+WPORT=2229
 
 CONTROL=/dev/acq400/data/.control
 TCON=/usr/local/bin/faultmon
@@ -97,7 +99,7 @@ start() {
 	[ ! -e /tmp/transient.fifo ] && mkfifo /tmp/transient.fifo
 	/usr/local/bin/procServ --holdoff 0 -c / -p $PIDF \
 		-L $LOG -l $LPORT $CPORT $TCON 
-
+	/usr/local/bin/procServ $WPORT /usr/local/bin/transient-watchdog
 }
 
 stop() {

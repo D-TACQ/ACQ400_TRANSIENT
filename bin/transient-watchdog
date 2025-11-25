@@ -1,6 +1,6 @@
 #!/usr/bin/env expect
-puts "hello tcl world"
 
+set timeout 5
 spawn acq4xx-transient-console
 
 while { 1 } {
