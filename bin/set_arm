@@ -1,2 +1,17 @@
 #!/bin/sh
-echo go >/dev/shm/on-setarm
+MYDATA=/dev/shm/on-setarm
+MYLOCK=/dev/shm/.on-setarm-lock
+
+run_set_arm() {
+	read shot state < $MYDATA
+	echo $shot go > $MYDATA
+	cat $MYDATA
+}
+
+case $1 in
+run_set_arm) run_set_arm;;
+
+*) flock $MYLOCK set_arm run_setarm;;
+esac
+
+

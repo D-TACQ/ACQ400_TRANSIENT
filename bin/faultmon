@@ -1,6 +1,8 @@
 #!/bin/sh
 
 ARM=/dev/shm/on-setarm
+MYDATA=/dev/shm/on-setarm
+MYLOCK=/dev/shm/.on-setarm-lock
 E400=/etc/acq400
 
 
@@ -27,17 +29,20 @@ force_close() {
 	done
 }
 
+init_faultmon() {
+	force_close
+	touch $MYDATA
+	read shot state < $MYDATA
+	case "$shot" in
+		''|*[!0-9]*) shot=0;;
+		*) shot=$((shot+1));;
+	esac
+	echo $shot IDLE > $MYDATA
+}
 
-/usr/local/CARE/acq400_stream_inp clear
-source /usr/local/bin/init_stream
 
-rm -f $ARM				# avoid race to re-arm
-force_close
-fix_state; cat /dev/shm/state
-while [ ! -e $ARM ]; do
-	usleep 10000
-done
 
+run_shot() {
 init_stream 0
 
 ARGS="--state-file /dev/shm/state $*"
@@ -109,4 +114,36 @@ echo "SHOT=0,$(cat ${E400}/${S1}/shot),$(cat ${E400}/0/shot_complete),$(cat ${E4
 echo "DATA_SIZE=$(stat -c%s /dev/acq400/data/raw/0),$(stat -c%s /dev/acq400/data/$S1/01)"
 
 exec /usr/local/bin/faultmon
+}
+
+
+
+run_faultmon() {
+	npoll=$1
+	read shot state < $MYDATA
+
+	if [ "x$state" = "xgo" ]; then
+		/usr/local/CARE/acq400_stream_inp clear
+		source /usr/local/bin/init_stream
+		fix_state; cat /dev/shm/state
+		run_shot
+	else
+		sleep 0.01
+	fi
+}
+
+
+# execution starts here
+
+case $1 in
+init_faultmon) init_faultmon;;
+run_faultmon)  run_faultmon $2;;
+*)
+	flock $MYLOCK faultmon init_faultmon
+	npoll=0
+	while true; do
+		flock $MYLOCK faultmon run_faultmon $npoll
+		npoll=$((npoll+1))
+	done;;
+esac
 
