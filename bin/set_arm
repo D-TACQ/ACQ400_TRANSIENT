@@ -11,7 +11,7 @@ run_set_arm() {
 case $1 in
 run_set_arm) run_set_arm;;
 
-*) flock $MYLOCK set_arm run_setarm;;
+*) flock $MYLOCK set_arm run_set_arm;;
 esac
 
 
