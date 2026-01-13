@@ -3,7 +3,6 @@
 ARM=/dev/shm/on-setarm
 E400=/etc/acq400
 
-/usr/local/CARE/acq400_stream_inp clear
 
 incr_shot() {
         shot=0
@@ -27,6 +26,9 @@ force_close() {
 		fi
 	done
 }
+
+
+/usr/local/CARE/acq400_stream_inp clear
 source /usr/local/bin/init_stream
 
 rm -f $ARM				# avoid race to re-arm
