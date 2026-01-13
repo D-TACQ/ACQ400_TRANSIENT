@@ -130,6 +130,7 @@ run_faultmon() {
 		fix_state; cat /dev/shm/state
 		run_shot
 		echo $shot IDLE > $MYDATA
+		safe_state 0; cat /dev/shm/state
 		echo run_shot 99
 	else
 		sleep 0.01
